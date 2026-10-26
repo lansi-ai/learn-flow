@@ -1,0 +1,116 @@
+# learn-flow 看板样例（自媒体运营）
+# 用法：复制到项目 docs/board.yaml 后按实际情况改写
+# 结构：能力域 → 单元 → 任务
+
+project: 自媒体运营学习（样例）
+goal: 6 个月内能稳定做出单条 5 万播放的科普短视频，完播率 ≥ 40%
+updated: 2026-10-26
+
+metrics:
+  - name: 完播率
+    def: 完整播放次数 / 播放次数
+  - name: 3 秒留存
+    def: 播放超 3 秒人数 / 曝光人数
+  - name: 收藏率
+    def: 收藏数 / 播放数
+
+domains:
+  - id: topic
+    name: 选题力
+    priority: P0
+    units:
+      - id: TP-01
+        name: 对标拆解
+        mastery: 2
+        target: 3
+        tasks:
+          - id: TP-01a
+            title: 拆解 10 条同垂类爆款，归纳钩子与结构模板
+            status: done
+            type: 练
+            mastery: 2
+            created: 2026-10-20
+            date: 2026-10-24
+            goal: 能归纳出 3 个可直接套用的钩子模板
+            evidence: docs/practice/topic/TP-01a.md
+            note: 拆完发现「结果前置」在科普类最好用，反常识次之
+          - id: TP-01b
+            title: 用归纳的模板产出 5 个自己的选题
+            status: doing
+            type: 产
+            mastery: 1
+            created: 2026-10-25
+            goal: 5 个选题每个都能说清「替谁解决什么」
+            review_due: 2026-10-27
+      - id: TP-02
+        name: 用户痛点识别
+        mastery: 1
+        tasks:
+          - id: TP-02a
+            title: 从评论区收集 50 条真实困惑并归类
+            status: done
+            type: 学
+            mastery: 1
+            created: 2026-10-26
+            date: 2026-10-26
+            evidence: docs/practice/topic/TP-02a.md
+            note: 收集完了也分了类，但说不出这些困惑的共同母题——按「能认」记，不算掌握
+
+  - id: script
+    name: 脚本力
+    priority: P0
+    units:
+      - id: SC-01
+        name: 前 3 秒钩子
+        mastery: 1
+        tasks:
+          - id: SC-01a
+            title: 同一选题写 5 种不同钩子开头
+            status: doing
+            type: 练
+            mastery: 1
+            created: 2026-10-24
+            goal: 5 个开头中至少 3 个让同事愿意看下去
+            dep: [TP-01a]
+          - id: SC-01b
+            title: 找 3 个外行测试钩子吸引力
+            status: todo
+            type: 产
+            created: 2026-10-26
+            dep: [SC-01a]
+      - id: SC-02
+        name: 结构与删减
+        mastery: 0
+        tasks:
+          - id: SC-02a
+            title: 把一条 3 分钟稿子压到 60 秒，信息不丢
+            status: todo
+            type: 练
+            created: 2026-10-26
+
+  - id: ops
+    name: 数据与迭代
+    priority: P1
+    units:
+      - id: OP-01
+        name: 单变量实验
+        mastery: 1
+        tasks:
+          - id: OP-01a
+            title: 发布第 1 条内容（只测开头类型，允许 60 分）
+            status: blocked
+            type: 产
+            mastery: 1
+            created: 2026-10-25
+            goal: 上线一条完整内容并拿到 24h 数据
+            note: 卡在封面还没做
+      - id: OP-02
+        name: 数据归因
+        mastery: 0
+        tasks:
+          - id: OP-02a
+            title: 回填第一条内容的完播率与 3 秒留存
+            status: todo
+            type: 复
+            created: 2026-10-26
+            dep: [OP-01a]

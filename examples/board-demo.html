@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>自媒体运营学习（样例） · 学习看板</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;background:#FAF9F6;color:#2C2C2A;font-size:14px;line-height:1.6;padding:28px 20px 60px}
+.wrap{max-width:1180px;margin:0 auto}
+header h1{font-size:22px;font-weight:600;letter-spacing:-.2px}
+.goal{color:#5F5E5A;font-size:14px;margin-top:6px}
+.meta{color:#888780;font-size:12px;margin-top:4px}
+.alert{margin:16px 0;padding:12px 14px;background:#FAEEDA;border-left:3px solid #854F0B;color:#633806;border-radius:4px;font-size:13px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 8px}
+.stat{background:#FFF;border:1px solid #E5E3DC;border-radius:10px;padding:14px 16px}
+.stat.warn{border-color:#EF9F27;background:#FFFBF2}
+.stat.danger{border-color:#E24B4A;background:#FFF7F7}
+.stat-v{font-size:26px;font-weight:600;line-height:1.2}
+.stat-l{font-size:13px;color:#2C2C2A;margin-top:2px}
+.stat-h{font-size:11px;color:#888780;margin-top:2px}
+h2{font-size:15px;font-weight:600;margin:26px 0 10px}
+.panel{background:#FFF;border:1px solid #E5E3DC;border-radius:10px;padding:16px}
+.panel-foot{font-size:12px;color:#888780;margin-top:12px;padding-top:10px;border-top:1px dashed #E5E3DC}
+.bar-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.bar-label{width:120px;font-size:13px;flex:none}
+.bar-track{flex:1;height:8px;background:#F1EFE8;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.bar-fill.blue{background:#378ADD}
+.bar-fill.green{background:#639922}
+.bar-fill.amber{background:#BA7517}
+.bar-num{width:64px;text-align:right;font-size:12px;color:#5F5E5A;flex:none}
+.rev-row{display:flex;gap:12px;align-items:baseline;padding:7px 0;border-bottom:1px solid #F1EFE8;font-size:13px}
+.rev-row:last-child{border-bottom:none}
+.rev-date{font-size:12px;color:#854F0B;width:88px;flex:none;font-variant-numeric:tabular-nums}
+.rev-title{flex:1}
+.rev-path{font-size:12px;color:#888780}
+.empty{color:#888780;font-size:13px;padding:10px 0}
+.tabs{display:flex;gap:4px;margin:22px 0 0;border-bottom:1px solid #E5E3DC}
+.tab{background:none;border:none;padding:9px 16px;font-size:14px;color:#5F5E5A;cursor:pointer;border-bottom:2px solid transparent;font-family:inherit}
+.tab.active{color:#185FA5;border-bottom-color:#185FA5;font-weight:500}
+.filters{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+.filters select{font-family:inherit;font-size:13px;padding:5px 8px;border:1px solid #D3D1C7;border-radius:6px;background:#FFF;color:#2C2C2A}
+section{display:none}section.active{display:block}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
+.col{background:#F5F4EF;border-radius:10px;padding:10px;min-height:120px}
+.col-head{font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;padding:4px 4px 10px}
+.col-count{margin-left:auto;font-size:11px;color:#888780;background:#E5E3DC;border-radius:9px;padding:1px 7px}
+.col-body{max-height:70vh;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.card{background:#FFF;border:1px solid #E5E3DC;border-radius:8px;padding:10px 11px}
+.card.hollow{border-left:3px solid #EF9F27}
+.card-top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.card-id{font-size:11px;color:#888780;font-variant-numeric:tabular-nums}
+.card-title{font-size:13px;font-weight:500;line-height:1.45}
+.card-path{font-size:11px;color:#888780;margin-top:3px}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.card-note{font-size:11px;color:#5F5E5A;margin-top:6px;padding-top:6px;border-top:1px dashed #E5E3DC}
+.tag{font-size:10px;padding:1px 6px;border-radius:3px;background:#F1EFE8;color:#5F5E5A}
+.tag.t-m{background:#E6F1FB;color:#185FA5}
+.tag.t-evd{background:#EAF3DE;color:#3B6D11}
+.tag.t-rev{background:#FAEEDA;color:#854F0B}
+.tag.t-data{background:#FBEAF0;color:#993556}
+.tag.t-dep{background:#EEEDFE;color:#534AB7}
+.st-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:none}
+.st-todo{background:#B4B2A9}.st-doing{background:#378ADD}
+.st-blocked{background:#E24B4A}.st-done{background:#639922}
+.tree details{background:#FFF;border:1px solid #E5E3DC;border-radius:10px;margin-bottom:10px;padding:2px 14px}
+.tree summary{cursor:pointer;padding:12px 0;display:flex;gap:10px;align-items:baseline}
+.tree-d{font-size:15px;font-weight:500}
+.tree-meta{font-size:12px;color:#888780}
+.tree-body{padding:0 0 12px 8px;border-top:1px dashed #E5E3DC}
+.unit{margin-top:12px}
+.unit-head{display:flex;gap:10px;align-items:baseline;margin-bottom:6px}
+.unit-name{font-size:13px;font-weight:500}
+.unit-id{font-size:11px;color:#888780}
+.unit-m{font-size:11px;color:#185FA5;margin-left:auto}
+.unit-tasks{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.mx{width:100%;border-collapse:collapse;background:#FFF;border:1px solid #E5E3DC;border-radius:10px;overflow:hidden;font-size:13px}
+.mx th{background:#F5F4EF;font-weight:500;font-size:12px;padding:9px 8px;text-align:center;border-bottom:1px solid #E5E3DC}
+.mx td{padding:8px;text-align:center;border-bottom:1px solid #F1EFE8;font-variant-numeric:tabular-nums}
+.mx-d{text-align:left;font-weight:500}
+.mx-on{color:#185FA5;font-weight:500;background:#F5FAFF}
+.mx-off{color:#C9C7BE}
+.warns{margin:16px 0;padding:12px 14px;background:#FFF7F7;border-left:3px solid #A32D2D;border-radius:4px;font-size:12px;color:#791F1F}
+.warns ul{margin-left:18px}
+</style></head>
+<body><div class="wrap">
+<header>
+  <h1>自媒体运营学习（样例）</h1>
+  <p class="goal">6 个月内能稳定做出单条 5 万播放的科普短视频，完播率 ≥ 40%</p>
+  <div class="meta">数据更新 2026-10-26 · 生成于 2026-10-26 11:22 · 源文件 board.example.yaml</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-view="v-overview">概览</button>
+  <button class="tab" data-view="v-board">看板</button>
+  <button class="tab" data-view="v-tree">能力树</button>
+  <button class="tab" data-view="v-matrix">矩阵</button>
+</div>
+<div class="filters">
+  <select id="f-domain"><option value="">全部能力域</option><option value="topic">选题力</option><option value="script">脚本力</option><option value="ops">数据与迭代</option></select>
+  <select id="f-status"><option value="">全部状态</option><option value="todo">待开始</option><option value="doing">进行中</option><option value="blocked">阻塞</option><option value="done">已完成</option></select>
+  <select id="f-type"><option value="">全部类型</option><option value="学">学（输入）</option><option value="练">练（练习）</option><option value="产">产（产出）</option><option value="复">复（复习）</option></select>
+</div>
+<main>
+  <section id="v-overview" class="active"><div class="grid4"><div class="stat "><div class="stat-v">8</div><div class="stat-l">任务总数</div><div class="stat-h">完成 2 项</div></div><div class="stat "><div class="stat-v">25%</div><div class="stat-l">完成率</div><div class="stat-h">按任务数计</div></div><div class="stat warn"><div class="stat-v">1</div><div class="stat-l">完成但未掌握</div><div class="stat-h">done 且掌握度 ≤1</div></div><div class="stat "><div class="stat-v">0</div><div class="stat-l">复习到期</div><div class="stat-h">今天及更早应复习</div></div></div><h2>各能力域掌握度</h2><div class="panel"><div class="bar-row"><div class="bar-label">选题力</div><div class="bar-track"><div class="bar-fill blue" style="width:38%"></div></div><div class="bar-num">1.5 / 4</div></div><div class="bar-row"><div class="bar-label">脚本力</div><div class="bar-track"><div class="bar-fill blue" style="width:12%"></div></div><div class="bar-num">0.5 / 4</div></div><div class="bar-row"><div class="bar-label">数据与迭代</div><div class="bar-track"><div class="bar-fill blue" style="width:12%"></div></div><div class="bar-num">0.5 / 4</div></div><div class="panel-foot">共 3 个能力域 · 掌握度取域内单元均值</div></div><h2>任务类型分布</h2><div class="panel"><div class="bar-row"><div class="bar-label">输入</div><div class="bar-track"><div class="bar-fill blue" style="width:12%"></div></div><div class="bar-num">1</div></div><div class="bar-row"><div class="bar-label">练习</div><div class="bar-track"><div class="bar-fill blue" style="width:38%"></div></div><div class="bar-num">3</div></div><div class="bar-row"><div class="bar-label">产出</div><div class="bar-track"><div class="bar-fill blue" style="width:38%"></div></div><div class="bar-num">3</div></div><div class="bar-row"><div class="bar-label">复习</div><div class="bar-track"><div class="bar-fill blue" style="width:12%"></div></div><div class="bar-num">1</div></div><div class="panel-foot">建议比例：学 ≤30% · 练 ≥40% · 产 ≥20% · 复按曲线</div></div><h2>今天该复习</h2><div class="panel"><div class="empty">没有到期的复习。注意：新学的单元按 1/3/7/15/30 天排复习才会出现在这里。</div></div></section>
+  <section id="v-board"><div class="board"><div class="col"><div class="col-head"><span class="st-dot st-todo"></span>待开始<span class="col-count">3</span></div><div class="col-body"><div class="card " data-domain="script" data-status="todo" data-type="产"><div class="card-top"><span class="st-dot st-todo"></span><span class="card-id">SC-01b</span></div><div class="card-title">找 3 个外行测试钩子吸引力</div><div class="card-path">脚本力 / 前 3 秒钩子</div><div class="card-tags"><span class="tag t-type">产出</span><span class="tag t-dep">依赖 SC-01a</span></div></div><div class="card " data-domain="script" data-status="todo" data-type="练"><div class="card-top"><span class="st-dot st-todo"></span><span class="card-id">SC-02a</span></div><div class="card-title">把一条 3 分钟稿子压到 60 秒，信息不丢</div><div class="card-path">脚本力 / 结构与删减</div><div class="card-tags"><span class="tag t-type">练习</span></div></div><div class="card " data-domain="ops" data-status="todo" data-type="复"><div class="card-top"><span class="st-dot st-todo"></span><span class="card-id">OP-02a</span></div><div class="card-title">回填第一条内容的完播率与 3 秒留存</div><div class="card-path">数据与迭代 / 数据归因</div><div class="card-tags"><span class="tag t-type">复习</span><span class="tag t-dep">依赖 OP-01a</span></div></div></div></div><div class="col"><div class="col-head"><span class="st-dot st-doing"></span>进行中<span class="col-count">2</span></div><div class="col-body"><div class="card " data-domain="topic" data-status="doing" data-type="产"><div class="card-top"><span class="st-dot st-doing"></span><span class="card-id">TP-01b</span></div><div class="card-title">用归纳的模板产出 5 个自己的选题</div><div class="card-path">选题力 / 对标拆解</div><div class="card-tags"><span class="tag t-type">产出</span><span class="tag t-m">掌握 1</span><span class="tag t-rev">复习 2026-10-27</span></div></div><div class="card " data-domain="script" data-status="doing" data-type="练"><div class="card-top"><span class="st-dot st-doing"></span><span class="card-id">SC-01a</span></div><div class="card-title">同一选题写 5 种不同钩子开头</div><div class="card-path">脚本力 / 前 3 秒钩子</div><div class="card-tags"><span class="tag t-type">练习</span><span class="tag t-m">掌握 1</span><span class="tag t-dep">依赖 TP-01a</span></div></div></div></div><div class="col"><div class="col-head"><span class="st-dot st-blocked"></span>阻塞<span class="col-count">1</span></div><div class="col-body"><div class="card " data-domain="ops" data-status="blocked" data-type="产"><div class="card-top"><span class="st-dot st-blocked"></span><span class="card-id">OP-01a</span></div><div class="card-title">发布第 1 条内容（只测开头类型，允许 60 分）</div><div class="card-path">数据与迭代 / 单变量实验</div><div class="card-tags"><span class="tag t-type">产出</span><span class="tag t-m">掌握 1</span></div><div class="card-note">卡在封面还没做</div></div></div></div><div class="col"><div class="col-head"><span class="st-dot st-done"></span>已完成<span class="col-count">2</span></div><div class="col-body"><div class="card " data-domain="topic" data-status="done" data-type="练"><div class="card-top"><span class="st-dot st-done"></span><span class="card-id">TP-01a</span></div><div class="card-title">拆解 10 条同垂类爆款，归纳钩子与结构模板</div><div class="card-path">选题力 / 对标拆解</div><div class="card-tags"><span class="tag t-type">练习</span><span class="tag t-m">掌握 2</span><span class="tag t-evd">有证据</span></div><div class="card-note">拆完发现「结果前置」在科普类最好用，反常识次之</div></div><div class="card hollow" data-domain="topic" data-status="done" data-type="学"><div class="card-top"><span class="st-dot st-done"></span><span class="card-id">TP-02a</span></div><div class="card-title">从评论区收集 50 条真实困惑并归类</div><div class="card-path">选题力 / 用户痛点识别</div><div class="card-tags"><span class="tag t-type">输入</span><span class="tag t-m">掌握 1</span><span class="tag t-evd">有证据</span></div><div class="card-note">收集完了也分了类，但说不出这些困惑的共同母题——按「能认」记，不算掌握</div></div></div></div></div></section>
+  <section id="v-tree"><div class="tree"><details open><summary><span class="tree-d">选题力</span><span class="tree-meta">P0 · 掌握度 1.5 · 2 单元</span></summary><div class="tree-body"><div class="unit"><div class="unit-head"><span class="unit-name">对标拆解</span><span class="unit-id">TP-01</span><span class="unit-m">掌握 2</span></div><div class="unit-tasks"><div class="card " data-domain="topic" data-status="done" data-type="练"><div class="card-top"><span class="st-dot st-done"></span><span class="card-id">TP-01a</span></div><div class="card-title">拆解 10 条同垂类爆款，归纳钩子与结构模板</div><div class="card-path">选题力 / 对标拆解</div><div class="card-tags"><span class="tag t-type">练习</span><span class="tag t-m">掌握 2</span><span class="tag t-evd">有证据</span></div><div class="card-note">拆完发现「结果前置」在科普类最好用，反常识次之</div></div><div class="card " data-domain="topic" data-status="doing" data-type="产"><div class="card-top"><span class="st-dot st-doing"></span><span class="card-id">TP-01b</span></div><div class="card-title">用归纳的模板产出 5 个自己的选题</div><div class="card-path">选题力 / 对标拆解</div><div class="card-tags"><span class="tag t-type">产出</span><span class="tag t-m">掌握 1</span><span class="tag t-rev">复习 2026-10-27</span></div></div></div></div><div class="unit"><div class="unit-head"><span class="unit-name">用户痛点识别</span><span class="unit-id">TP-02</span><span class="unit-m">掌握 1</span></div><div class="unit-tasks"><div class="card hollow" data-domain="topic" data-status="done" data-type="学"><div class="card-top"><span class="st-dot st-done"></span><span class="card-id">TP-02a</span></div><div class="card-title">从评论区收集 50 条真实困惑并归类</div><div class="card-path">选题力 / 用户痛点识别</div><div class="card-tags"><span class="tag t-type">输入</span><span class="tag t-m">掌握 1</span><span class="tag t-evd">有证据</span></div><div class="card-note">收集完了也分了类，但说不出这些困惑的共同母题——按「能认」记，不算掌握</div></div></div></div></div></details><details open><summary><span class="tree-d">脚本力</span><span class="tree-meta">P0 · 掌握度 0.5 · 2 单元</span></summary><div class="tree-body"><div class="unit"><div class="unit-head"><span class="unit-name">前 3 秒钩子</span><span class="unit-id">SC-01</span><span class="unit-m">掌握 1</span></div><div class="unit-tasks"><div class="card " data-domain="script" data-status="doing" data-type="练"><div class="card-top"><span class="st-dot st-doing"></span><span class="card-id">SC-01a</span></div><div class="card-title">同一选题写 5 种不同钩子开头</div><div class="card-path">脚本力 / 前 3 秒钩子</div><div class="card-tags"><span class="tag t-type">练习</span><span class="tag t-m">掌握 1</span><span class="tag t-dep">依赖 TP-01a</span></div></div><div class="card " data-domain="script" data-status="todo" data-type="产"><div class="card-top"><span class="st-dot st-todo"></span><span class="card-id">SC-01b</span></div><div class="card-title">找 3 个外行测试钩子吸引力</div><div class="card-path">脚本力 / 前 3 秒钩子</div><div class="card-tags"><span class="tag t-type">产出</span><span class="tag t-dep">依赖 SC-01a</span></div></div></div></div><div class="unit"><div class="unit-head"><span class="unit-name">结构与删减</span><span class="unit-id">SC-02</span><span class="unit-m">掌握 0</span></div><div class="unit-tasks"><div class="card " data-domain="script" data-status="todo" data-type="练"><div class="card-top"><span class="st-dot st-todo"></span><span class="card-id">SC-02a</span></div><div class="card-title">把一条 3 分钟稿子压到 60 秒，信息不丢</div><div class="card-path">脚本力 / 结构与删减</div><div class="card-tags"><span class="tag t-type">练习</span></div></div></div></div></div></details><details open><summary><span class="tree-d">数据与迭代</span><span class="tree-meta">P1 · 掌握度 0.5 · 2 单元</span></summary><div class="tree-body"><div class="unit"><div class="unit-head"><span class="unit-name">单变量实验</span><span class="unit-id">OP-01</span><span class="unit-m">掌握 1</span></div><div class="unit-tasks"><div class="card " data-domain="ops" data-status="blocked" data-type="产"><div class="card-top"><span class="st-dot st-blocked"></span><span class="card-id">OP-01a</span></div><div class="card-title">发布第 1 条内容（只测开头类型，允许 60 分）</div><div class="card-path">数据与迭代 / 单变量实验</div><div class="card-tags"><span class="tag t-type">产出</span><span class="tag t-m">掌握 1</span></div><div class="card-note">卡在封面还没做</div></div></div></div><div class="unit"><div class="unit-head"><span class="unit-name">数据归因</span><span class="unit-id">OP-02</span><span class="unit-m">掌握 0</span></div><div class="unit-tasks"><div class="card " data-domain="ops" data-status="todo" data-type="复"><div class="card-top"><span class="st-dot st-todo"></span><span class="card-id">OP-02a</span></div><div class="card-title">回填第一条内容的完播率与 3 秒留存</div><div class="card-path">数据与迭代 / 数据归因</div><div class="card-tags"><span class="tag t-type">复习</span><span class="tag t-dep">依赖 OP-01a</span></div></div></div></div></div></details></div></section>
+  <section id="v-matrix"><table class="mx"><thead><tr><th>能力域</th><th>0 未接触</th><th>1 能认</th><th>2 能复述</th><th>3 能独立做</th><th>4 能教别人</th><th>未评级</th></tr></thead><tbody><tr><td class="mx-d">选题力</td><td class="mx-off">·</td><td class="mx-on">1</td><td class="mx-on">1</td><td class="mx-off">·</td><td class="mx-off">·</td><td class="mx-off">·</td></tr><tr><td class="mx-d">脚本力</td><td class="mx-on">1</td><td class="mx-on">1</td><td class="mx-off">·</td><td class="mx-off">·</td><td class="mx-off">·</td><td class="mx-off">·</td></tr><tr><td class="mx-d">数据与迭代</td><td class="mx-on">1</td><td class="mx-on">1</td><td class="mx-off">·</td><td class="mx-off">·</td><td class="mx-off">·</td><td class="mx-off">·</td></tr></tbody></table><div class="panel-foot">单元格 = 处于该掌握度的单元数。整行偏左说明这个域还没真正开始；整行偏右但 <code>done</code> 很多，检查是不是自评放水。</div></section>
+</main>
+</div><script>
+(function(){
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      tabs.forEach(function(x){x.classList.remove('active')});
+      document.querySelectorAll('section').forEach(function(s){s.classList.remove('active')});
+      t.classList.add('active');
+      document.getElementById(t.dataset.view).classList.add('active');
+    });
+  });
+  function apply(){
+    var d=(document.getElementById('f-domain')||{}).value||'';
+    var s=(document.getElementById('f-status')||{}).value||'';
+    var ty=(document.getElementById('f-type')||{}).value||'';
+    document.querySelectorAll('.card').forEach(function(c){
+      var ok=(!d||c.dataset.domain===d)&&(!s||c.dataset.status===s)&&(!ty||c.dataset.type===ty);
+      c.style.display=ok?'':'none';
+    });
+  }
+  ['f-domain','f-status','f-type'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.addEventListener('change',apply);
+  });
+})();
+</script></body></html>

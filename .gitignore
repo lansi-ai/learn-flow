@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+*.log
+
+# 生成的看板产物（由 skills/learn-start/assets/build-board.py 重新生成）
+docs/board-html/
